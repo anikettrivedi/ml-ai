@@ -1,5 +1,6 @@
 import copy, math
 import numpy as np
+np.set_printoptions(precision=2)
 
 # linear regression with multiple variables related functions
 
@@ -51,9 +52,6 @@ def gradient_descent(X, y, w_in, b_in, cost_function, gradient_function, alpha, 
     w = copy.deepcopy(w_in)
     b = copy.deepcopy(b_in)
     
-    # print(f"Iteration Cost          w0       w1       w2       w3       b       djdw0    djdw1    djdw2    djdw3    djdb  ")
-    # print(f"---------------------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|")
-    
     for i in range (num_iters):
         
         # calculate gradients
@@ -76,6 +74,18 @@ def gradient_descent(X, y, w_in, b_in, cost_function, gradient_function, alpha, 
             # print(f"{i:9d} {cst:0.5e} {w[0]: 0.1e} {w[1]: 0.1e} {w[2]: 0.1e} {w[3]: 0.1e} {b: 0.1e} {dj_dw[0]: 0.1e} {dj_dw[1]: 0.1e} {dj_dw[2]: 0.1e} {dj_dw[3]: 0.1e} {dj_db: 0.1e}")     
         
     
-    print (f"w0 final = {w[0]}, b final = {b}")
+    print (f"w final = {w}, b final = {b}")
     
     return w, b, J_history, w0_hist, b_hist
+
+def zscore_normalize_features(X):
+    
+    # mean
+    mu = np.mean(X, axis=0)
+    
+    # standard deviation
+    sigma = np.std(X, axis=0)
+    
+    X_norm = (X - mu)/sigma
+    
+    return (X_norm, mu, sigma)
