@@ -2,8 +2,13 @@ import copy, math
 import numpy as np
 np.set_printoptions(precision=2)
 
-# linear regression with multiple variables related functions
+def load_house_data():
+    data = np.loadtxt("houses.txt", delimiter=',', skiprows=1)
+    X = data[:,:4]
+    y = data[:,4]
+    return X, y
 
+# linear regression with multiple variables related functions
 def compute_cost(X, y, w, b):
     m = X.shape[0]
     cost = 0.0
