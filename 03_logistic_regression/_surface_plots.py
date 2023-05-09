@@ -72,4 +72,28 @@ def plot_logistic_regression_squared_error_cost(X, y):
     ax.set_zlabel('Square Error Cost', rotation=90)
     
     ax.set_title('Logistic Squared Error Cost vs (w,b)')
+
     
+# plotting two curves of logistic loss function
+def plot_two_logistic_loss_curves():
+    
+    fig, ax = plt.subplots(1, 2, sharey=True)
+    
+    x = np.linspace(0.01,0.99,20)
+    
+    ax[0].plot(x, -np.log(x))
+    ax[0].text(0.5, 4.0,"y=1")
+    ax[0].set_ylabel("loss")
+    ax[0].set_xlabel(r"$f_{w,b}(x)$")
+    
+    ax[1].plot(x, -np.log(1-x))
+    ax[1].text(0.5, 4.0, "y=0")
+    ax[1].set_xlabel(r"$f_{w,b}(x)$")
+    
+    plt.suptitle("Loss Curves for Two Categorical Target Values", fontsize=12)
+    plt.tight_layout()
+    plt.show()
+    
+# plotting logistic cost function
+def plot_logistic_regression_logistic_cost():
+    print('todo')
