@@ -3,7 +3,10 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 from _logistic_regression_util import sigmoid
 
-# simplified demonstations of linear regression cost in 3D
+######################################################################
+############# simplified demonstations of linear regression cost in 3D
+######################################################################
+
 def plot_linear_regression_cost_3d():
     
     fig = plt.figure(figsize=(4,4))
@@ -34,6 +37,10 @@ def plot_linear_regression_cost_3d():
     plt.show()
     
 
+######################################################################
+##### plotting squared error cost (loss) for logistic regression in 3D
+######################################################################
+
 def compute_cost_logistic_square_error(X, y, w, b):
     
     m = X.shape[0]
@@ -47,7 +54,6 @@ def compute_cost_logistic_square_error(X, y, w, b):
     cost = cost/(2*m)
     return np.squeeze(cost)
 
-# plotting squared error cost (loss) for logistic regression in 3D
 def plot_logistic_regression_squared_error_cost(X, y):
     
     # selected values for w, b for demonstration purpose
@@ -73,8 +79,10 @@ def plot_logistic_regression_squared_error_cost(X, y):
     
     ax.set_title('Logistic Squared Error Cost vs (w,b)')
 
-    
-# plotting two curves of logistic loss function
+############################################################
+######## plotting two curves of logistic loss function in 2D
+############################################################
+
 def plot_two_logistic_loss_curves():
     
     fig, ax = plt.subplots(1, 2, sharey=True)
@@ -93,7 +101,80 @@ def plot_two_logistic_loss_curves():
     plt.suptitle("Loss Curves for Two Categorical Target Values", fontsize=12)
     plt.tight_layout()
     plt.show()
+
+############################################################
+######## plotting two curves of logistic loss function in 3D
+############################################################
+
+def log_1pexp(x, maximum=20):
+    ''' approximate log(1+exp^x)
+        https://stats.stackexchange.com/questions/475589/numerical-computation-of-cross-entropy-in-practice
+    Args:
+    x   : (ndarray Shape (n,1) or (n,)  input
+    out : (ndarray Shape matches x      output ~= np.log(1+exp(x))
+    '''
+
+    out  = np.zeros_like(x,dtype=float)
+    i    = x <= maximum
+    ni   = np.logical_not(i)
+
+    out[i]  = np.log(1 + np.exp(x[i]))
+    out[ni] = x[ni]
+    return out
+
+def compute_cost_matrix(X, y, w, b):
+    """
+    Computes the cost using  using matrices
+    Args:
+      X : (ndarray, Shape (m,n))          matrix of examples
+      y : (ndarray  Shape (m,) or (m,1))  target value of each example
+      w : (ndarray  Shape (n,) or (n,1))  Values of parameter(s) of the model
+      b : (scalar )                       Values of parameter of the model
+      verbose : (Boolean) If true, print out intermediate value f_wb
+    Returns:
+      total_cost: (scalar)                cost
+    """
+    m = X.shape[0]
+    y = y.reshape(-1,1)             # ensure 2D
+    w = w.reshape(-1,1)             # ensure 2D
+  
+    z = X @ w + b                                                           #(m,n)(n,1)=(m,1)
+    cost = -(y * z) + log_1pexp(z)
+    cost = np.sum(cost)/m                                                   # (scalar)
+
+    return cost     
     
 # plotting logistic cost function
-def plot_logistic_regression_logistic_cost():
-    print('todo')
+def plot_logistic_regression_logistic_cost(X,y):
+    
+    wx, by = np.meshgrid(np.linspace(-6,12,50), np.linspace(0, -20, 40))
+    points = np.c_[wx.ravel(), by.ravel()]
+    cost = np.zeros(points.shape[0],dtype=np.longdouble)
+    
+    for i in range(points.shape[0]):
+        w,b = points[i]
+        cost[i] = compute_cost_matrix(X.reshape(-1,1), y, w, b)
+    
+    cost = cost.reshape(wx.shape)
+    
+    fig = plt.figure(figsize=(9,5))
+
+    ax = fig.add_subplot(1, 2, 1, projection='3d')
+    ax.plot_surface(wx, by, cost, alpha=0.6,cmap=cm.jet,)
+
+    ax.set_xlabel('w', fontsize=16)
+    ax.set_ylabel('b', fontsize=16)
+    ax.set_zlabel("Cost", rotation=90, fontsize=16)
+    ax.set_title('Logistic Cost vs (w, b)')
+
+    ax = fig.add_subplot(1, 2, 2, projection='3d')
+
+    ax.plot_surface(wx, by, np.log(cost), alpha=0.6,cmap=cm.jet,)
+
+    ax.set_xlabel('w', fontsize=16)
+    ax.set_ylabel('b', fontsize=16)
+    ax.set_zlabel('\nlog(Cost)', fontsize=16)
+    ax.set_title('log(Logistic Cost) vs (w, b)')
+    
+    plt.show()
+    return cost
