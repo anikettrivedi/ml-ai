@@ -103,7 +103,7 @@ def plot_two_logistic_loss_curves():
     plt.show()
 
 ############################################################
-######## plotting two curves of logistic loss function in 3D
+######## plotting logistic cost function in 3D
 ############################################################
 
 def log_1pexp(x, maximum=20):
@@ -144,7 +144,6 @@ def compute_cost_matrix(X, y, w, b):
 
     return cost     
     
-# plotting logistic cost function
 def plot_logistic_regression_logistic_cost(X,y):
     
     wx, by = np.meshgrid(np.linspace(-6,12,50), np.linspace(0, -20, 40))
